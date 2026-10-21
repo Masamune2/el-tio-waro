@@ -108,7 +108,7 @@ escuchar("form-login", "submit", async e => {
             .from('usuarios')
             .select('*')
             .eq('correo', correo)
-            .eq('clave', clave);
+            .eq('"contraseña"', clave);
 
         if (error) {
             console.error("Error Supabase:", error);
