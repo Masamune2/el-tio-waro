@@ -103,12 +103,12 @@ escuchar("form-login", "submit", async e => {
     }
 
     try {
-        // Consulta limpia usando 'correo' y 'contraseña'
+        // Consulta limpia usando 'correo' y 'clave'
         const { data: usuarios, error } = await supabaseClient
             .from('usuarios')
             .select('*')
             .eq('correo', correo)
-            .eq('contraseña', clave);
+            .eq('clave', clave);
 
         if (error) {
             console.error("Error Supabase:", error);
