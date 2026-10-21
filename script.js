@@ -1,7 +1,10 @@
 "use strict";
 
 const SUPABASE_URL = 'https://ykiutnpwznbcqxaatqw.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_Isw96D1TSmlU0LgVVK2Ovw_QZqYhmtW';
+const SUPABASE_ANON_KEY = 'sb_publisable_Isw96D1TSmlU0LgVVK20vw_QZqYhmtW';
+
+// Inicializar Supabase globalmente
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 const CLAVE_DATOS = "elTioWaroDatosV2";
 
@@ -93,11 +96,10 @@ escuchar("form-login", "submit", async e => {
     const correo = valor("login-correo").trim().toLowerCase();
     const clave = valor("login-clave");
 
-    // Limpiar errores previos
     ponerTexto("error-login", "");
 
     try {
-        // Consultar directamente a la base de datos de Supabase
+        // Consulta directa a Supabase
         const { data: usuarios, error } = await supabase
             .from('usuarios')
             .select('*')
@@ -105,8 +107,8 @@ escuchar("form-login", "submit", async e => {
             .eq('contraseña', clave);
 
         if (error) {
-            console.error(error);
-            return ponerTexto("error-login", "Error al conectar con la base de datos.");
+            console.error("Error Supabase:", error);
+            return ponerTexto("error-login", "Error al consultar la base de datos.");
         }
 
         if (!usuarios || usuarios.length === 0) {
@@ -115,14 +117,11 @@ escuchar("form-login", "submit", async e => {
 
         const user = usuarios[0];
 
-        // Mapear rol si viene con mayúscula de la base de datos
-        const rolNormalizado = (user.rol || "").toLowerCase();
-
         usuarioActual = {
             id: user.id || "admin-master",
             nombre: user.nombre || "Administrador General",
             correo: user['correo electrónico'],
-            rol: rolNormalizado,
+            rol: (user.rol || "").toLowerCase(),
             tienda: user.tienda || "",
             activo: true
         };
@@ -138,7 +137,7 @@ escuchar("form-login", "submit", async e => {
         elemento("menu-tienda")?.classList.toggle("oculta", esAdmin);
 
     } catch (err) {
-        console.error(err);
+        console.error("Error inesperado:", err);
         ponerTexto("error-login", "Ocurrió un error inesperado al iniciar sesión.");
     }
 });
