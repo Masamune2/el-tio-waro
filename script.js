@@ -3,8 +3,8 @@
 const SUPABASE_URL = 'https://ykiutnpwznbcqxaatqw.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publisable_Isw96D1TSmlU0LgVVK20vw_QZqYhmtW';
 
-// Inicializar Supabase globalmente
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// Cliente único y seguro
+const supabaseClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 
 const CLAVE_DATOS = "elTioWaroDatosV2";
 
@@ -98,9 +98,13 @@ escuchar("form-login", "submit", async e => {
 
     ponerTexto("error-login", "");
 
+    if (!supabaseClient) {
+        return ponerTexto("error-login", "Error: La librería de Supabase no cargó correctamente.");
+    }
+
     try {
-        // Consulta directa a Supabase
-        const { data: usuarios, error } = await supabase
+        // Consulta directa usando supabaseClient
+        const { data: usuarios, error } = await supabaseClient
             .from('usuarios')
             .select('*')
             .eq('correo electrónico', correo)
@@ -125,6 +129,22 @@ escuchar("form-login", "submit", async e => {
             tienda: user.tienda || "",
             activo: true
         };
+
+        carrito = [];
+        elemento("pagina-acceso")?.classList.add("oculta");
+        elemento("aplicacion")?.classList.remove("oculta");
+        ponerTexto("sesion-nombre", usuarioActual.nombre);
+        ponerTexto("sesion-rol", usuarioActual.rol === "administrador" ? "Administrador" : `Tienda: ${usuarioActual.tienda}`);
+
+        const esAdmin = usuarioActual.rol === "administrador";
+        elemento("menu-administrador")?.classList.toggle("oculta", !esAdmin);
+        elemento("menu-tienda")?.classList.toggle("oculta", esAdmin);
+
+    } catch (err) {
+        console.error("Error inesperado:", err);
+        ponerTexto("error-login", "Ocurrió un error inesperado al iniciar sesión.");
+    }
+});
 
         carrito = [];
         elemento("pagina-acceso")?.classList.add("oculta");
