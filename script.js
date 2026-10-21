@@ -103,12 +103,11 @@ escuchar("form-login", "submit", async e => {
     }
 
     try {
-        // Consulta limpia usando 'correo' y 'clave'
+        // Consultamos únicamente por 'correo' para evitar errores con la 'ñ' en Supabase (Línea 114)
         const { data: usuarios, error } = await supabaseClient
             .from('usuarios')
             .select('*')
-            .eq('correo', correo)
-            .eq('"contraseña"', clave);
+            .eq('correo', correo);
 
         if (error) {
             console.error("Error Supabase:", error);
@@ -120,6 +119,12 @@ escuchar("form-login", "submit", async e => {
         }
 
         const user = usuarios[0];
+
+        // Validamos la contraseña de manera local (soporta 'contraseña' o 'clave' según el campo en BD)
+        const passwordEnBD = user.contraseña || user.clave;
+        if (passwordEnBD !== clave) {
+            return ponerTexto("error-login", "Correo o contraseña incorrectos.");
+        }
 
         usuarioActual = {
             id: user.identificacion || "admin-master",
