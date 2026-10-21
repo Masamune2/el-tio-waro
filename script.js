@@ -105,10 +105,10 @@ escuchar("form-login", "submit", async e => {
     try {
         // Consulta adaptada a tus columnas exactas de Supabase
         const { data: usuarios, error } = await supabaseClient
-            .from('usuarios')
-            .select('*')
-            .eq('"Correo electrónico"', correo)
-            .eq('contraseña', clave);
+             .from('usuarios')
+             .select('*')
+             .eq('correo', correo)
+             .eq('contraseña', clave);
         if (error) {
             console.error("Error Supabase:", error);
             return ponerTexto("error-login", "Error al consultar la base de datos.");
