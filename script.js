@@ -103,12 +103,13 @@ escuchar("form-login", "submit", async e => {
     }
 
     try {
-        // Consulta adaptada a tus columnas exactas de Supabase
+        // Consulta limpia usando 'correo' y 'contraseña'
         const { data: usuarios, error } = await supabaseClient
-             .from('usuarios')
-             .select('*')
-             .eq('correo', correo)
-             .eq('contraseña', clave);
+            .from('usuarios')
+            .select('*')
+            .eq('correo', correo)
+            .eq('contraseña', clave);
+
         if (error) {
             console.error("Error Supabase:", error);
             return ponerTexto("error-login", "Error al consultar la base de datos.");
@@ -123,7 +124,7 @@ escuchar("form-login", "submit", async e => {
         usuarioActual = {
             id: user.identificacion || "admin-master",
             nombre: user.nombre || "Administrador General",
-            correo: user['Correo electrónico'],
+            correo: user.correo,
             rol: (user.rol || "").toLowerCase(),
             tienda: user.tienda || "",
             activo: true
