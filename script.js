@@ -1,8 +1,8 @@
 "use strict";
 
-onst SUPABASE_URL = 'https://ykiutnpwznbcqxaatqw.supabase.co';
+const SUPABASE_URL = 'https://ykiutnpwznbcqxaatqw.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_Isw96D1TSmlU0LgVVK2Ovw_QZqYhmtW';
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
 const CLAVE_DATOS = "elTioWaroDatosV2";
 
 const ADMIN_INICIAL = {
