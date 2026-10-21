@@ -1,6 +1,6 @@
 "use strict";
 
-const SUPABASE_URL = 'https://ykiutnpwznbcqxaatqw.supabase.co';
+const SUPABASE_URL = 'https://ykiiutnpwznbcqxaatqw.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlraWl1dG5wd3puYmNxeGFhdHF3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI1OTc3MjksImV4cCI6MjEwODE3MzcyOX0.eFX-mF0XApOsMZ1YEfVOX0VFUJFUW66mIhlWioOypHU';
 
 // Cliente único y seguro
