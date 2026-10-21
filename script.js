@@ -103,10 +103,11 @@ escuchar("form-login", "submit", async e => {
     }
 
     try {
+        // Consulta adaptada a tus columnas exactas de Supabase
         const { data: usuarios, error } = await supabaseClient
             .from('usuarios')
             .select('*')
-            .eq('correo electrónico', correo)
+            .eq('Correo electrónico', correo)
             .eq('contraseña', clave);
 
         if (error) {
@@ -121,9 +122,9 @@ escuchar("form-login", "submit", async e => {
         const user = usuarios[0];
 
         usuarioActual = {
-            id: user.id || "admin-master",
+            id: user.identificacion || "admin-master",
             nombre: user.nombre || "Administrador General",
-            correo: user['correo electrónico'],
+            correo: user['Correo electrónico'],
             rol: (user.rol || "").toLowerCase(),
             tienda: user.tienda || "",
             activo: true
