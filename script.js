@@ -88,31 +88,59 @@ escuchar("ver-clave", "click", () => {
     ponerTexto("ver-clave", mostrar ? "Ocultar" : "Ver");
 });
 
-escuchar("form-login", "submit", e => {
+escuchar("form-login", "submit", async e => {
     e.preventDefault();
     const correo = valor("login-correo").trim().toLowerCase();
     const clave = valor("login-clave");
 
-    const user = datos.usuarios.find(u => u.correo.toLowerCase() === correo && u.clave === clave);
-    if (!user) {
-        return ponerTexto("error-login", "Correo o contraseña incorrectos.");
+    // Limpiar errores previos
+    ponerTexto("error-login", "");
+
+    try {
+        // Consultar directamente a la base de datos de Supabase
+        const { data: usuarios, error } = await supabase
+            .from('usuarios')
+            .select('*')
+            .eq('correo electrónico', correo)
+            .eq('contraseña', clave);
+
+        if (error) {
+            console.error(error);
+            return ponerTexto("error-login", "Error al conectar con la base de datos.");
+        }
+
+        if (!usuarios || usuarios.length === 0) {
+            return ponerTexto("error-login", "Correo o contraseña incorrectos.");
+        }
+
+        const user = usuarios[0];
+
+        // Mapear rol si viene con mayúscula de la base de datos
+        const rolNormalizado = (user.rol || "").toLowerCase();
+
+        usuarioActual = {
+            id: user.id || "admin-master",
+            nombre: user.nombre || "Administrador General",
+            correo: user['correo electrónico'],
+            rol: rolNormalizado,
+            tienda: user.tienda || "",
+            activo: true
+        };
+
+        carrito = [];
+        elemento("pagina-acceso")?.classList.add("oculta");
+        elemento("aplicacion")?.classList.remove("oculta");
+        ponerTexto("sesion-nombre", usuarioActual.nombre);
+        ponerTexto("sesion-rol", usuarioActual.rol === "administrador" ? "Administrador" : `Tienda: ${usuarioActual.tienda}`);
+
+        const esAdmin = usuarioActual.rol === "administrador";
+        elemento("menu-administrador")?.classList.toggle("oculta", !esAdmin);
+        elemento("menu-tienda")?.classList.toggle("oculta", esAdmin);
+
+    } catch (err) {
+        console.error(err);
+        ponerTexto("error-login", "Ocurrió un error inesperado al iniciar sesión.");
     }
-    if (!user.activo) {
-        return ponerTexto("error-login", "Esta cuenta se encuentra deshabilitada.");
-    }
-
-    usuarioActual = user;
-    carrito = [];
-    elemento("pagina-acceso")?.classList.add("oculta");
-    elemento("aplicacion")?.classList.remove("oculta");
-    ponerTexto("sesion-nombre", user.nombre);
-    ponerTexto("sesion-rol", user.rol === "administrador" ? "Administrador" : `Tienda: ${user.tienda}`);
-
-    const esAdmin = user.rol === "administrador";
-    elemento("menu-administrador")?.classList.toggle("oculta", !esAdmin);
-    elemento("menu-tienda")?.classList.toggle("oculta", esAdmin);
-
-    abrirSeccion(esAdmin ? "admin-usuarios" : "tienda-inicio");
 });
 
 escuchar("cerrar-sesion", "click", () => {
