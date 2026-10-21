@@ -103,7 +103,6 @@ escuchar("form-login", "submit", async e => {
     }
 
     try {
-        // Consulta directa usando supabaseClient
         const { data: usuarios, error } = await supabaseClient
             .from('usuarios')
             .select('*')
@@ -129,22 +128,6 @@ escuchar("form-login", "submit", async e => {
             tienda: user.tienda || "",
             activo: true
         };
-
-        carrito = [];
-        elemento("pagina-acceso")?.classList.add("oculta");
-        elemento("aplicacion")?.classList.remove("oculta");
-        ponerTexto("sesion-nombre", usuarioActual.nombre);
-        ponerTexto("sesion-rol", usuarioActual.rol === "administrador" ? "Administrador" : `Tienda: ${usuarioActual.tienda}`);
-
-        const esAdmin = usuarioActual.rol === "administrador";
-        elemento("menu-administrador")?.classList.toggle("oculta", !esAdmin);
-        elemento("menu-tienda")?.classList.toggle("oculta", esAdmin);
-
-    } catch (err) {
-        console.error("Error inesperado:", err);
-        ponerTexto("error-login", "Ocurrió un error inesperado al iniciar sesión.");
-    }
-});
 
         carrito = [];
         elemento("pagina-acceso")?.classList.add("oculta");
