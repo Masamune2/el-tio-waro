@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#166534">
+    <title>El Tío Waro | Sistema de ventas</title>
+    <link rel="stylesheet" href="estilos.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+
+    <!-- PANTALLA DE ACCESO -->
+    <main class="pagina" id="pagina-acceso">
+        <section class="panel-marca">
+            <div class="marca-contenido">
+                <div class="logo">TW</div>
+                <p class="etiqueta">SISTEMA DE GESTIÓN</p>
+                <h1>El Tío Waro</h1>
+                <p class="descripcion">Control y gestión de ventas, inventario y usuarios.</p>
+            </div>
+            <p class="texto-inferior" style="position:absolute; bottom:24px; left:55px; color:#bbf7d0; font-size:11px; font-weight:700;">CONTROL • ORDEN • CONFIANZA</p>
+        </section>
+
+        <section class="panel-formulario">
+            <div class="formulario-contenido">
+                <p class="subtitulo">Bienvenido de nuevo</p>
+                <h2>Iniciar sesión</h2>
+                <p class="texto-ayuda">Ingresa tus datos para continuar.</p>
+
+                <form id="form-login">
+                    <div class="grupo-campo">
+                        <label for="login-correo">Correo electrónico</label>
+                        <input type="email" id="login-correo" placeholder="nombre@correo.com" required autocomplete="username">
+                    </div>
+
+                    <div class="grupo-campo">
+                        <label for="login-clave">Contraseña</label>
+                        <div class="campo-clave">
+                            <input type="password" id="login-clave" placeholder="Ingresa tu contraseña" required autocomplete="current-password">
+                            <button type="button" class="ver-clave" id="ver-clave">Ver</button>
+                        </div>
+                    </div>
+
+                    <p id="error-login" class="mensaje-error"></p>
+                    <button type="submit" class="boton-principal">Iniciar sesión</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- SISTEMA PRINCIPAL -->
+    <main id="aplicacion" class="aplicacion oculta">
+        <header class="encabezado-app">
+            <div class="encabezado-marca">
+                <div class="logo-pequeno">TW</div>
+                <div>
+                    <h1 style="font-size: 18px; margin: 0;">El Tío Waro</h1>
+                    <p style="font-size: 11px; color: var(--texto-secundario); margin: 0;">Sistema de gestión</p>
+                </div>
+            </div>
+
+            <div class="datos-sesion">
+                <div>
+                    <strong id="sesion-nombre" style="font-size: 13px; display: block;">Usuario</strong>
+                    <p id="sesion-rol" style="font-size: 11px; color: var(--texto-secundario); margin: 0;">Rol</p>
+                </div>
+                <button type="button" id="cerrar-sesion" class="boton-secundario boton-pequeno">Cerrar sesión</button>
+            </div>
+        </header>
+
+        <div class="estructura-app">
+
+            <!-- MENÚ ADMINISTRADOR -->
+            <aside id="menu-administrador" class="menu-lateral oculta">
+                <h3>Administración</h3>
+                <button type="button" class="opcion-menu activa" data-seccion="admin-usuarios">Gestión de usuarios</button>
+            </aside>
+
+            <!-- MENÚ TIENDA -->
+            <aside id="menu-tienda" class="menu-lateral oculta">
+                <h3>Mi tienda</h3>
+                <button type="button" class="opcion-menu activa" data-seccion="tienda-inicio">Inicio y Ventas</button>
+                <button type="button" class="opcion-menu" data-seccion="tienda-inventario">Inventario y Promociones</button>
+                <button type="button" class="opcion-menu" data-seccion="tienda-historial">Historial de ventas</button>
+            </aside>
+
+            <section class="contenido-app">
+
+                <!-- ADMIN: GESTIÓN DE USUARIOS -->
+                <section id="admin-usuarios" class="seccion-app oculta">
+                    <h2>Gestión de usuarios</h2>
+                    <p class="texto-ayuda">Crea cuentas de administrador o tienda, deshabilítalas, elimínalas o restablece sus claves.</p>
+
+                    <div class="tarjeta-contenido">
+                        <h3>Crear nuevo usuario</h3>
+                        <form id="form-crear-usuario">
+                            <div class="grupo-campo">
+                                <label for="nuevo-nombre">Nombre completo</label>
+                                <input type="text" id="nuevo-nombre" required maxlength="100">
+                            </div>
+                            <div class="grupo-campo">
+                                <label for="nuevo-correo">Correo electrónico</label>
+                                <input type="email" id="nuevo-correo" required>
+                            </div>
+                            <div class="grupo-campo">
+                                <label for="nuevo-clave">Contraseña temporal</label>
+                                <input type="password" id="nuevo-clave" required minlength="6">
+                            </div>
+                            <div class="grupo-campo">
+                                <label for="nuevo-rol">Rol del usuario</label>
+                                <select id="nuevo-rol" required>
+                                    <option value="tienda">Tienda</option>
+                                    <option value="administrador">Administrador</option>
+                                </select>
+                            </div>
+                            <div class="grupo-campo" id="contenedor-tienda-nombre">
+                                <label for="nuevo-tienda">Nombre de la tienda</label>
+                                <input type="text" id="nuevo-tienda" placeholder="Ej. Tienda Norte">
+                            </div>
+                            <p id="mensaje-usuario" class="mensaje-exito"></p>
+                            <button type="submit" class="boton-principal">Crear usuario</button>
+                        </form>
+                    </div>
+
+                    <div class="tarjeta-contenido">
+                        <h3>Usuarios registrados en el sistema</h3>
+                        <div class="tabla-contenedor scroll-interno" style="max-height: 300px;">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Correo</th>
+                                        <th>Rol</th>
+                                        <th>Tienda</th>
+                                        <th>Estado</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tabla-usuarios">
+                                    <tr><td colspan="6">No hay usuarios.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- TIENDA: INICIO Y VENTAS -->
+                <section id="tienda-inicio" class="seccion-app oculta">
+                    <h2>Registrar venta</h2>
+                    <p class="texto-ayuda">Busca productos o promociones y arma el carrito de compras del cliente.</p>
+
+                    <div class="zona-venta-grid">
+                        <div class="tarjeta-contenido" style="margin:0;">
+                            <h3>Catálogo de productos y promociones</h3>
+                            <div class="grupo-campo">
+                                <label for="buscar-catalogo">Buscar producto o promoción</label>
+                                <input type="search" id="buscar-catalogo" placeholder="Escribe para buscar...">
+                            </div>
+
+                            <div class="scroll-interno" style="max-height: 400px;" id="lista-catalogo">
+                                <p>No hay elementos disponibles.</p>
+                            </div>
+                        </div>
+
+                        <div class="tarjeta-contenido" style="margin:0; background: #fcfdfc;">
+                            <h3>Productos añadidos</h3>
+                            <div class="scroll-interno" style="max-height: 200px;" id="lista-carrito-lateral">
+                                <p style="font-size: 13px; color: var(--texto-secundario);">El carrito está vacío.</p>
+                            </div>
+
+                            <div style="border-top: 2px solid var(--borde); margin-top: 15px; padding-top: 12px;">
+                                <p style="display:flex; justify-content:space-between; margin:0 0 10px 0; font-size: 15px;">
+                                    <span>Total a pagar:</span>
+                                    <strong id="carrito-total-monto" style="color: var(--verde);">S/ 0.00</strong>
+                                </p>
+
+                                <div class="grupo-campo">
+                                    <label for="metodo-pago">Método de pago</label>
+                                    <select id="metodo-pago">
+                                        <option value="efectivo">Efectivo</option>
+                                        <option value="yape">Yape</option>
+                                    </select>
+                                </div>
+
+                                <div id="bloque-yape" class="grupo-campo oculta" style="background:#f0fdf4; padding:12px; border-radius:8px; border:1px solid #bbf7d0;">
+                                    <label for="yape-destinatario">Nombre de quien recibe el Yape (Obligatorio)</label>
+                                    <input type="text" id="yape-destinatario" placeholder="Ej. Dueño o colaborador">
+                                </div>
+
+                                <p id="mensaje-venta" class="mensaje-exito"></p>
+                                <button type="button" id="confirmar-pago-btn" class="boton-principal" style="width:100%;">Pago realizado</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- TIENDA: INVENTARIO Y PROMOCIONES -->
+                <section id="tienda-inventario" class="seccion-app oculta">
+                    <h2>Inventario y Promociones</h2>
+                    <p class="texto-ayuda">Registra tus productos y arma tus combos o promociones especiales (ej. 3 productos por S/ 63.00).</p>
+
+                    <div class="tarjeta-contenido">
+                        <h3 id="titulo-form-producto">Agregar nuevo producto</h3>
+                        <form id="form-producto">
+                            <input type="hidden" id="producto-id">
+                            <div class="grupo-campo">
+                                <label for="prod-nombre">Nombre del producto</label>
+                                <input type="text" id="prod-nombre" required maxlength="100">
+                            </div>
+                            <div class="grupo-campo">
+                                <label for="prod-categoria">Categoría</label>
+                                <select id="prod-categoria" required>
+                                    <option value="Abarrotes">Abarrotes</option>
+                                    <option value="Bebidas">Bebidas</option>
+                                    <option value="Gaseosas">Gaseosas</option>
+                                    <option value="Lácteos">Lácteos</option>
+                                    <option value="Limpieza">Limpieza</option>
+                                    <option value="Snacks">Snacks</option>
+                                    <option value="Otros">Otros</option>
+                                </select>
+                            </div>
+                            <div class="grupo-campo">
+                                <label for="prod-precio">Precio de venta (S/)</label>
+                                <input type="number" id="prod-precio" min="0.01" step="0.01" required>
+                            </div>
+                            <div class="grupo-campo">
+                                <label for="prod-stock">Cantidad en stock</label>
+                                <input type="number" id="prod-stock" min="0" step="1" required>
+                            </div>
+                            <p id="mensaje-producto" class="mensaje-exito"></p>
+                            <button type="submit" class="boton-principal">Guardar producto</button>
+                        </form>
+                    </div>
+
+                    <div class="tarjeta-contenido">
+                        <h3>Mis productos registrados</h3>
+                        <div class="tabla-contenedor scroll-interno" style="max-height: 250px;">
+                            <table>
+                                <thead>
+                                    <tr><th>Producto</th><th>Categoría</th><th>Precio</th><th>Stock</th><th>Estado</th><th>Acciones</th></tr>
+                                </thead>
+                                <tbody id="tabla-inventario">
+                                    <tr><td colspan="6">No hay productos en stock.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="tarjeta-contenido">
+                        <h3>Crear Promoción o Combo</h3>
+                        <p class="texto-ayuda">Selecciona varios productos y asígnale un precio total fijo (ej. 3 productos por S/ 63.00).</p>
+                        <form id="form-promocion">
+                            <div class="grupo-campo">
+                                <label for="promo-nombre">Nombre de la promoción</label>
+                                <input type="text" id="promo-nombre" placeholder="Ej. Combo Ahorro x3" required>
+                            </div>
+                            <div class="grupo-campo">
+                                <label>Productos que componen el combo</label>
+                                <div id="promo-componentes-lista"></div>
+                                <button type="button" id="agregar-fila-combo" class="boton-secundario boton-pequeno" style="margin-top: 8px;">+ Agregar producto al combo</button>
+                            </div>
+                            <div class="grupo-campo" style="margin-top: 15px;">
+                                <label for="promo-precio">Precio total del combo (S/)</label>
+                                <input type="number" id="promo-precio" min="0.01" step="0.01" placeholder="Ej. 63.00" required>
+                            </div>
+                            <p id="mensaje-promocion" class="mensaje-exito"></p>
+                            <button type="submit" class="boton-principal">Guardar promoción</button>
+                        </form>
+                    </div>
+
+                    <div class="tarjeta-contenido">
+                        <h3>Promociones activas de la tienda</h3>
+                        <div class="tabla-contenedor scroll-interno" style="max-height: 220px;">
+                            <table>
+                                <thead>
+                                    <tr><th>Promoción</th><th>Componentes</th><th>Precio Combo</th><th>Acciones</th></tr>
+                                </thead>
+                                <tbody id="tabla-promociones">
+                                    <tr><td colspan="4">No hay promociones creadas.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- TIENDA: HISTORIAL DE VENTAS -->
+                <section id="tienda-historial" class="seccion-app oculta">
+                    <h2>Historial de ventas</h2>
+                    <p class="texto-ayuda">Filtra las ventas de tu tienda por periodo (Día, Semana, Mes o Año).</p>
+
+                    <div class="tarjeta-contenido">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; align-items: end;">
+                            <div class="grupo-campo" style="margin:0;">
+                                <label for="filtro-periodo">Filtrar por periodo</label>
+                                <select id="filtro-periodo">
+                                    <option value="dia">Día actual</option>
+                                    <option value="semana">Semana actual</option>
+                                    <option value="mes">Mes actual</option>
+                                    <option value="anio">Año actual</option>
+                                    <option value="todos">Todos los registros</option>
+                                </select>
+                            </div>
+                            <div class="grupo-campo" style="margin:0;">
+                                <label for="filtro-fecha-ref">Fecha de referencia</label>
+                                <input type="date" id="filtro-fecha-ref">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tarjeta-contenido">
+                        <h3>Ventas encontradas</h3>
+                        <div class="tabla-contenedor scroll-interno" style="max-height: 380px;">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Código</th>
+                                        <th>Fecha y Hora</th>
+                                        <th>Productos / Combos</th>
+                                        <th>Método de Pago</th>
+                                        <th>Total Recaudado</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tabla-historial-tienda">
+                                    <tr><td colspan="5">No hay ventas registradas para este filtro.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+            </section>
+        </div>
+
+        <footer class="pie-app">© 2026 El Tío Waro</footer>
+    </main>
+
+    <!-- MODAL PERSONALIZADO PARA CONFIRMAR ACCIONES (REEMPLAZA LAS ALERTAS DEL NAVEGADOR) -->
+    <div id="modal-confirmar" class="tarjeta-contenido oculta" style="position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); z-index:9999; background:#fff; width:90%; max-width:400px; box-shadow:0 20px 50px rgba(0,0,0,0.4); border-radius:12px; border:1px solid var(--borde);">
+        <h3 id="modal-confirmar-titulo" style="margin-bottom:8px;">Confirmar acción</h3>
+        <p id="modal-confirmar-mensaje" class="texto-ayuda" style="margin-bottom:20px;">¿Estás seguro?</p>
+        <div style="display:flex; gap:10px; justify-content:flex-end;">
+            <button type="button" id="modal-confirmar-cancelar" class="boton-secundario">Cancelar</button>
+            <button type="button" id="modal-confirmar-aceptar" class="boton-peligro">Aceptar</button>
+        </div>
+    </div>
+
+    <!-- MODAL PARA RESTABLECER CONTRASEÑA -->
+    <div id="modal-clave" class="tarjeta-contenido oculta" style="position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); z-index:9999; background:#fff; width:90%; max-width:400px; box-shadow:0 20px 50px rgba(0,0,0,0.4); border-radius:12px; border:1px solid var(--borde);">
+        <h3>Restablecer contraseña</h3>
+        <p id="modal-usuario-info" class="texto-ayuda"></p>
+        <input type="hidden" id="modal-usuario-id">
+        <div class="grupo-campo">
+            <label for="modal-nueva-clave">Nueva contraseña</label>
+            <input type="password" id="modal-nueva-clave" placeholder="Mínimo 6 caracteres" minlength="6">
+        </div>
+        <div style="display:flex; gap:10px; justify-content:flex-end;">
+            <button type="button" id="modal-cerrar-btn" class="boton-secundario">Cancelar</button>
+            <button type="button" id="modal-guardar-clave-btn" class="boton-principal">Guardar clave</button>
+        </div>
+    </div>
+
+</body>
+</html>
